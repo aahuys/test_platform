@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Instruction step 1/2:</title>
+    <style>
+      input[type=submit] {
+        font-size: 24px;
+      }
+      body {
+        font-size: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        height: 100vh;
+        margin: 0;
+        padding: 0;
+        border-left: 25vw solid white;
+        border-right: 25vw solid white;
+      }
+      h1, p, ol, form {
+        margin: 0;
+        padding: 0;
+      }
+      ol {
+        margin-top: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Instruction step 1/2:</h1>
+    <p>You will be presented a total of 15 movies. Most of these movies were produced during 1990-2009. This survey should take around 10 minutes. Take your time to rate them using the following steps please:</p>
+    <ol>
+      <li>Look at the cover and the title. If you have seen this movie, click on the switch below "seen" so that it turns blue.</li>
+      <li>If you have not seen the movie, press the symbol below "more info." This will open a webpage with extra information about the film.</li>
+      <li>Once you have enough information about the movie, rate it using the scale below. 5 is perfect and 0.5 is awful</li>
+      <li>Press the "submit" button once and wait until the next movie appears.</li>
+    </ol>
+    <form action="/active_learning" method="GET">
+      <input type="submit" value="Start">
+    </form>
+  </body>
+</html>

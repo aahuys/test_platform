@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Active_Learning</title>
+  <style>
+    img {max-width: 450px;max-height: 450px;width: auto;height: auto;}
+    .text-center {text-align: center;}
+    input[type=range] {width: 35%;}
+    .slider-container {display: flex;flex-direction: column;align-items: center;}
+    .slider-scale {display: flex;justify-content: space-between;width: 38%;font-size: 14px;margin-bottom: 10px;}
+    .slider-scale span {flex-basis: calc(20% - 5px);text-align: center;}
+    button[type=submit] {margin-top: 14px;}
+    .switch {position: relative;display: inline-block;width: 50px;height: 25px;}
+    .switch input {display: none;}
+    .slider {position: absolute;cursor: pointer;top: 0;left: 0;right: 0;bottom: 0;background-color: #ccc;-webkit-transition: .4s;transition: .4s;}
+    .slider:before {position: absolute;content: "";height: 21px;width: 21px;left: 2px;bottom: 2px;background-color: white;-webkit-transition: .4s;transition: .4s;}
+    input:checked + .slider {background-color: #2196F3;}
+    input:focus + .slider {box-shadow: 0 0 1px #2196F3;}
+    input:checked + .slider:before {-webkit-transform: translateX(25px);-ms-transform: translateX(25px);transform: translateX(25px);}
+  </style>
+</head>
+<body>
+  <div style="text-align: center;">
+    <img src="data:image/png;base64,{{ cover }}" />
+  </div>
+  <div class="text-center">
+    <h2 style="font-size: 20px;">What would you rate this movie?</h2>
+    <p style="font-size: 18px;">{{ item }}</p>
+    <form method="post" action="/active_learning">
+      <input type="hidden" name="current_item" value="{{ item }}">
+      <div class="slider-container">
+        <div style="display: flex; justify-content: space-between; width: 35%;">
+          <div style="display: flex; flex-direction: column; align-items: center;">
+            <span style="font-size: 16px;">Seen</span>
+            <label class="switch">
+              <input type="checkbox" name="seen" value="seen">
+              <span class="slider"></span>
+            </label>
+          </div>
+          <div style="display: flex; flex-direction: column; align-items: center;">
+            <span style="font-size: 16px;">More info</span>
+            <a href="{{ link }}" target="_blank" style="text-decoration: none; color: blue; font-size: 16px;">&#9432;</a>
+          </div>
+        </div>
+        <input type="range" name="rating" min="0.5" max="5" step="0.5">
+        <div class="slider-scale">
+          <span>0.5</span>
+          <span>1</span>
+          <span>1.5</span>
+          <span>2</span>
+          <span>2.5</span>
+          <span>3</span>
+          <span>3.5</span>
+          <span>4</span>
+          <span>4.5</span>
+          <span>5</span>
+        </div>
+        <button type="submit">Submit Rating</button>
+      </div>
+    </form>
+  </div>
+</body>
+</html>
