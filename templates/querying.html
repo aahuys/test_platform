@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Active_Learning</title>
+  <style>
+    img {max-width: 450px;max-height: 450px;width: auto;height: auto;}
+    .text-center {text-align: center;}
+    input[type=range] {width: 35%;}
+    .slider-container {display: flex;flex-direction: column;align-items: center;}
+    .slider-scale {display: flex;justify-content: space-between;width: 38%;font-size: 14px;margin-bottom: 10px;}
+    .slider-scale span {flex-basis: calc(20% - 5px);text-align: center;}
+    button[type=submit] {margin-top: 10px; margin-right: 10px;}
+  </style>
+</head>
+<body>
+  <div style="text-align: center;">
+    <img src="data:image/png;base64,{{ cover }}" />
+  </div>
+  <div class="text-center">
+    <h2 style="font-size: 20px;">What would you rate this movie?</h2>
+    <p style="font-size: 18px;">{{ item }}</p>
+    <form method="post" action="/querying">
+      <input type="hidden" name="current_item" value="{{ item }}">
+      <div class="slider-container">
+        <input type="range" name="rating" min="0.5" max="5" step="0.5">
+        <div class="slider-scale">
+          <span>0.5</span>
+          <span>1</span>
+          <span>1.5</span>
+          <span>2</span>
+          <span>2.5</span>
+          <span>3</span>
+          <span>3.5</span>
+          <span>4</span>
+          <span>4.5</span>
+          <span>5</span>
+        </div>
+        <button type="submit">Submit Rating</button>
+        <button type="submit" name="not_seen" value="true">Not Seen</button>
+      </div>
+    </form>
+  </div>
+</body>
+</html>
