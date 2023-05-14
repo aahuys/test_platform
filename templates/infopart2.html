@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Instruction step 1/2:</title>
+    <style>
+      input[type=submit] {
+        font-size: 24px;
+      }
+      body {
+        font-size: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        height: 100vh;
+        margin: 0;
+        padding: 0;
+        border-left: 25vw solid white;
+        border-right: 25vw solid white;
+      }
+      h1, p, ol, form {
+        margin: 0;
+        padding: 0;
+      }
+      ol {
+        margin-top: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Instruction step 2/2:</h1>
+    <p>In this part you will be presented 40 movies. Rate them using these steps please:</p>
+    <ol>
+      <li>Look at the cover and the title. If you have seen this movie, rate it using the scale below.</li>
+      <li>If you have seen the movie, press the "submit" button.</li>
+      <li>If you have not seen the movie, press the "not seen" button.</li>
+      <li>Wait until the next movie appears.</li>
+    </ol>
+    <form action="/querying" method="GET">
+      <input type="submit" value="Start">
+    </form>
+  </body>
+</html>
