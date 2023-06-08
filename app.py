@@ -30,28 +30,43 @@ querie_items_part2 = [318, 356, 296, 593, 2571, 260, 480, 527,
 test_items = [1704, 10, 2858, 7361, 5349, 349, 592, 3147,
               293, 253, 1682, 1961, 1206, 2028, 457, 1197, 58559, 4226,
               1265, 1270, 1089, 2628, 858, 33794, 1097,'end']
+
+#admin page to extract data
 @app.route("/admin",methods=['GET', 'POST'])
 def admin():
     if request.method == 'POST':
         password = request.form['password']
+        #check if password is corrent
         if password == 'decisionTree':
             # Load the CSV file and return it as a downloadable file
             with open('emails.csv', 'r') as f:
+                #convert file
                 csv_data = io.BytesIO(f.read().encode())
+            #send files as csv file
             return send_file(csv_data, as_attachment=True,mimetype='text/csv',download_name='data-online.csv')
         else:
+            #if pass is invalid return "invalid password"
             return "Invalid password"
     else:
         return render_template("admin.html")
+    
+#homepage
 @app.route("/")
 def home():
     return render_template("home.html")
 
+#login page
 @app.route("/login", methods=["POST"])
 def login():
+    #get email
     email = request.form["email"]
+    #check if email in emails.csv file
     if email in get_emails():
-        return render_template("warning.html")
+        #store email in session
+        session['email']=email
+        # render information page
+        return render_template("info.html")
+    #if not in file: add to file
     else:
         #
         write_email(email)
@@ -60,21 +75,26 @@ def login():
         # render information page
         return render_template('info.html')
 
+#present info for first stage
 @app.route('/info', methods=['POST','GET'])
 def info():
     # redirect to active learning route
     return redirect('/active_learning',code=307)
 
+#present the items of the first stage
 @app.route('/active_learning', methods=['POST', 'GET'])
 def active_learning():
+    #check if first call
     if request.method == 'POST':
         #get seen status
         seen = request.form.get('seen')
+        #add to user variable
         seenList = session.get('seen',[])
         if seen == 'seen':
             seenList.append(True)
         else:
             seenList.append(False)
+        #change user variable
         session['seen'] = seenList
         #get rating from slider
         rating = float(request.form['rating'])
@@ -98,11 +118,14 @@ def active_learning():
         link = 'https://www.imdb.com/title/tt'+(7-len(linkid))*'0'+linkid
         #Render the like/dislike template with the next item
         return render_template('active_learning.html', item=title, cover=cover,link=link)
+    #if first call just render first item
     else:
         #get title
         currentNode = tree.root
+        #create user variable list for ratings and seens
         session['ratingsP1'] = []
         session['seen'] = []
+        #get first item to present
         item = currentNode.item
         title = movies[movies['movieId'] == item]['title'].to_list()[0]
         #get cover image
@@ -113,13 +136,16 @@ def active_learning():
         #render first query page
         return render_template('active_learning.html', item=title, cover=cover,link=link)
 
+#present second info part
 @app.route('/infopart2', methods=['POST','GET'])
 def infopart2():
     #redirect to active learning route
     return redirect('/querying',code=307)
 
+#present the items of the first stage
 @app.route('/querying', methods=['POST', 'GET'])
 def querying():
+    #check if first call
     if request.method == 'POST':
         #get seen status
         rated = request.form.get('not_seen')
@@ -141,11 +167,12 @@ def querying():
             session['ratingsP2'] = ratings
         #get item
         nrRatings = len(ratings)
+        #check which item to present, stage2 or test item?
         if nrRatings <15:
             item = querie_items_part2[len(ratings)]
         else:
             item = test_items[len(ratings)-15]
-        #check to see if node exists otherwise clear session['ratings'] and redirect
+        #check to see if at end, write all results of user to file
         if item == 'end':
             r = session.get('ratingsP1',[])
             s = session.get('seen',[])
@@ -163,9 +190,11 @@ def querying():
         cover = getCover(title)
         #render the rating template with the next item
         return render_template('querying.html', item=title, cover=cover)
+    #if first call
     else:
-        #get title
+        #get title of item
         item = querie_items_part2[0]
+        #create new user variable
         session['ratingsP2'] = []
         title = movies[movies['movieId'] == item]['title'].to_list()[0]
         #get cover image
@@ -173,21 +202,24 @@ def querying():
         #render first query page
         return render_template('querying.html', item=title, cover=cover)
 
+#show end screen
 @app.route('/end')
 def end():
     return render_template('end.html')
 
-
+#retrieve all emails as list
 def get_emails():
     with open("emails.csv", "r") as file:
         reader = csv.reader(file)
         return [row[0] for row in reader]
 
+#write email to file
 def write_email(email):
     with open("emails.csv", "a",newline='') as file:
         writer = csv.writer(file)
         writer.writerow([email])
 
+#write all user variables to file
 def write_ratings(ratings,seen,queries,email):
     #find correct row
     rows, row_number = None, None
@@ -200,7 +232,7 @@ def write_ratings(ratings,seen,queries,email):
             row_number = i
             break
     #add ratings, seen and queries
-    rows[row_number].extend([ratings, seen, queries])
+    rows[row_number] = [email, ratings, seen, queries]
     with open('emails_temp.csv', 'w', newline='') as csvfile:
         writer = csv.writer(csvfile)
         writer.writerows(rows)
